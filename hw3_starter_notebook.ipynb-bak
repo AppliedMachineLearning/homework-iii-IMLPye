@@ -26,7 +26,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 17,
+   "execution_count": 8,
    "metadata": {
     "collapsed": false
    },
@@ -51,8 +51,8 @@
     "import matplotlib.pyplot as plt\n",
     "\n",
     "\n",
-    "dataPath = \"C:/Users/lith/Desktop/HW3/HW3Test-Fork/data/data.csv\"\n",
-    "dataraw = pd.read_csv(dataPath)"
+    "dataPath = \"data/data.csv\"\n",
+    "data = pd.read_csv(dataPath)"
    ]
   },
   {
@@ -61,27 +61,18 @@
    "source": [
     "# Step1 - Exploration and Preparation [10 points]\n",
     "\n",
-    "In this step, we expect you to look into the data and try to understand it before modeling. This understanding may lead to some basic data preparation steps which are common across the two model sets required.\n",
-    "********************************************************************************\n",
-    "1) Remove the \"Duration\" attribute which is not related with the modeling\n",
-    "\n",
-    "2) Convert categorical data to numeric data \n",
-    "\n",
-    "3) Extract traning and target\n",
-    "\n",
-    "4) Split training and testing data"
+    "In this step, we expect you to look into the data and try to understand it before modeling. This understanding may lead to some basic data preparation steps which are common across the two model sets required."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 18,
+   "execution_count": 9,
    "metadata": {
     "collapsed": false
    },
    "outputs": [],
    "source": [
     "#write code below, y\n",
-    "data = dataraw.drop('duration', 1)\n",
     "data = pd.get_dummies(data)\n",
     "X = data.iloc[:,:-2]\n",
     "y = data.iloc[:,-1:]    \n",
@@ -101,16 +92,12 @@
     "* feature selection\n",
     "* final model selection\n",
     "\n",
-    "You may select up to 5 models in this step for the purpose of final ensemble. Any classification algorithm covered in class apart from tree-based models can be tested here.\n",
-    "\n",
-    "1) Use five models: NC/KNN/SVM/SGD/Logistic Regression\n",
-    "\n",
-    "2) The feature engineering/validation/feature selection have been done in the previous step"
+    "You may select up to 5 models in this step for the purpose of final ensemble. Any classification algorithm covered in class apart from tree-based models can be tested here."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 19,
+   "execution_count": 10,
    "metadata": {
     "collapsed": true
    },
@@ -133,7 +120,7 @@
     "    clf = SGDClassifier(loss=\"hinge\").fit(X_train,y_train)\n",
     "    print (clf.score(X_test,y_test))\n",
     "    \n",
-    "    # 5: Logistic Regression  \n",
+    "    # 5: LogReg  \n",
     "    logreg = LogisticRegression(multi_class=\"multinomial\",solver=\"lbfgs\").fit(X_train,y_train)\n",
     "    print (logreg.score(X_test,y_test))"
    ]
@@ -151,17 +138,12 @@
     "* feature selection\n",
     "* final model selection\n",
     "\n",
-    "You may select up to 5 models in this step for the purpose of final ensemble. We encourage you to try decition tree, random forest and gradient boosted tree methods here and pick the one which you think works best.\n",
-    "\n",
-    "\n",
-    "1) Use five models: Decision Tree/Random Forest/Gradient boosted Tree\n",
-    "\n",
-    "2) The feature engineering/validation/feature selection have been done in the previous step"
+    "You may select up to 5 models in this step for the purpose of final ensemble. We encourage you to try decition tree, random forest and gradient boosted tree methods here and pick the one which you think works best."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 20,
+   "execution_count": 11,
    "metadata": {
     "collapsed": true
    },
@@ -170,15 +152,15 @@
     "def modelset2():    \n",
     "    # 1: Decision Tree\n",
     "    dt = DecisionTreeClassifier().fit(X_train,y_train)\n",
-    "    print (dt.score(X_test,y_test))\n",
+    "    dt.score(X_test,y_test)\n",
     "    \n",
     "    # 2: Random Forest\n",
     "    rf = RandomForestClassifier().fit(X_train,y_train)\n",
-    "    print(rf.score(X_test,y_test))\n",
+    "    rf.score(X_test,y_test)\n",
     "    \n",
     "    # 3: Gradient boosted Tree\n",
     "    gbc = GradientBoostingClassifier().fit(X_train,y_train)\n",
-    "    print(gbc.score(X_test,y_test))"
+    "    gbc.score(X_test,y_test)"
    ]
   },
   {
@@ -187,24 +169,12 @@
    "source": [
     "# Step4 - Ensemble [20 points + 10 Bonus points]\n",
     "\n",
-    "In this step, we expect you to use the models created before and create new predictions. You should definitely try poor man's stacking but we encourage you to think of different ensemble techniques as well. We will judge your creativity and improvement in model performance using ensemble models and you can potentially earn 10 bonus points here.\n",
-    "\n",
-    "1) From Modelset1: KNeighborsClassifier and LogisticRegression have good acurracy\n",
-    "\n",
-    "2) From Modelset2: Decision Tree and Random Forest have good accuracy\n",
-    "\n",
-    "3) Use VotingClassifier to ensemble the best results generated from the above two steps\n",
-    "    - LogisticRegression\n",
-    "    - KNeighborsClassifier\n",
-    "    - Decision Tree\n",
-    "    - Random Forest\n",
-    "\n",
-    "4) ROC figure is draw here to show the performance of classification"
+    "In this step, we expect you to use the models created before and create new predictions. You should definitely try poor man's stacking but we encourage you to think of different ensemble techniques as well. We will judge your creativity and improvement in model performance using ensemble models and you can potentially earn 10 bonus points here."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 23,
+   "execution_count": 12,
    "metadata": {
     "collapsed": false
    },
@@ -213,9 +183,8 @@
     "def ensemble():\n",
     "    # Ensemble Clustering\n",
     "    voting = VotingClassifier([('logreg',LogisticRegression(C=100)),\n",
-    "                               ('knn',KNeighborsClassifier()),\n",
-    "                               ('Dt',DecisionTreeClassifier()),\n",
-    "                               ('RF',RandomForestClassifier())]\n",
+    "                               ('tree',DecisionTreeClassifier()),\n",
+    "                               ('knn',KNeighborsClassifier())]\n",
     "                              ,voting='soft')\n",
     "    model = voting.fit(X_train,y_train)\n",
     "    predictions = model.predict(X_test)\n",
@@ -239,14 +208,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 25,
+   "execution_count": 13,
    "metadata": {
     "collapsed": false
    },
    "outputs": [],
    "source": [
     "def test_accuracy():\n",
-    "    assert(ensemble()>0.89)\n",
+    "    assert(ensemble()>0.65)\n",
     "\n"
    ]
   },
