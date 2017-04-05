@@ -1,13 +1,13 @@
 # Homework3: Ye Ouyang
 # homework-iii-starter
-the starter repository for hw3
+
 
 There are two main files and one folder for data
 1) .travis.yml: To configure the Travis and set the environment for test
 2) hw3_starter_notebook.ipynb: The file containing the codes
 
 The steps in the code:
-1) Data Cleaning
+1) Data Cleaning (All data pre-processing and feature engineering/selection are done in this step)
 	- Remove the "Duration" attribute which is not related with the modeling
 	- Convert categorical data to numeric data
 	- Extract traning and target
